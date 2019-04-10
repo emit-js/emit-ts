@@ -1,0 +1,24 @@
+{
+  "name": "ts-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "author": "Winton Welsh <winton@cyclo.ps>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "24.0.11",
+    "@types/node": "11.13.0",
+    "tslint": "5.15.0",
+    "tslint-config-prettier": "1.18.0",
+    "tslint-config-standard": "8.0.1",
+    "typescript": "3.4.2"
+  },
+  "dependencies": {
+    "jest": "^24.7.1",
+    "ts-jest": "^24.0.2"
+  }
+}
