@@ -1,6 +1,3 @@
-// module augmentation + overloading
-// https://www.typescriptlang.org/docs/handbook/declaration-merging.html
-
 import { Emit } from "./index"
 
 declare module "./index" {
