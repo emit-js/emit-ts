@@ -24,31 +24,31 @@ export class Emit {
     this.onListeners = {}
   }
 
-  any(id: IdType, fn: (...args) => any) {
-    const p = this.flatten(id)
-    const key = p.join(".")
+  any(nestedId: IdType, fn: (...args) => any) {
+    const id = this.flatten(nestedId)
+    const key = id.join(".")
 
     this.anyListeners[key] = this.anyListeners[key] || []
     this.anyListeners[key].push(fn)
     
-    if (p.length === 1) {
-      this[p[0]] = (id: IdType, ...args) =>
+    if (id.length === 1) {
+      this[id[0]] = (nestedId: IdType, ...args) =>
         this.emit(
-          Array.isArray(id) ?
-            [p[0], ...id] :
-            [p[0], id],
+          Array.isArray(nestedId) ?
+            [id[0], ...nestedId] :
+            [id[0], nestedId],
           ...args
         )
     }
   }
   
-  emit(id: IdType, ...args) {
-    const i = this.flatten(id)
+  emit(nestedId: IdType, ...args) {
+    const id = this.flatten(nestedId)
     const e: Event = {
       args,
       emit: this,
-      id: i.slice(1),
-      name: i[0]
+      id: id.slice(1),
+      name: id[0]
     }
     
     if (this.anyListeners[""]) {
@@ -59,8 +59,9 @@ export class Emit {
 
     let key
 
-    for (const id of i) {
-      key = key ? key + "." + id : id;
+    for (const i of id) {
+      key = key ? key + "." + i : i
+
       if (this.anyListeners[key]) {
         for (const fn of this.anyListeners[key]) {
           fn(e, ...args)
@@ -68,7 +69,7 @@ export class Emit {
       }
     }
 
-    key = i.join(".")
+    key = id.join(".")
 
     if (this.onListeners[key]) {
       for (const fn of this.onListeners[key]) {
@@ -77,15 +78,15 @@ export class Emit {
     }
   }
 
-  flatten(array: IdType): string[] {
-    if (Array.isArray(array)) {
+  flatten(id: IdType): string[] {
+    if (Array.isArray(id)) {
       let result = []
-      for (const item of array) {
+      for (const item of id) {
         result = result.concat(item)
       }
       return result
-    } else if (array) {
-      return [array]
+    } else if (id) {
+      return [id]
     } else {
       return []
     }

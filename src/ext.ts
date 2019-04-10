@@ -2,7 +2,7 @@ import { Emit } from "./index"
 
 declare module "./index" {
   interface Emit {
-    hello(prop: PropType, flag: boolean)
+    hello(id: IdType, flag: boolean)
   }
 }
 
