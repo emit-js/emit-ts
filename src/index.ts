@@ -128,4 +128,12 @@ export class Emit {
       return []
     }
   }
+
+  on(nestedId: EventIdType, fn: (...args) => any) {
+    const id = this.flattenNestedIds(nestedId)
+    const key = id.join(".")
+
+    this.onListeners[key] = this.onListeners[key] || []
+    this.onListeners[key].push(fn)
+  }
 }
