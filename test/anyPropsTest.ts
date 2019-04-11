@@ -6,25 +6,25 @@ beforeEach(function () {
   emit = new Emit()
 })
 
-describe("any (no props)", function () {
+describe("any (props)", function () {
   test("calls listener", function () {
     expect.assertions(1)
 
-    emit.any(null, function () {
+    emit.any("a", function () {
       expect(true).toBe(true)
     })
 
-    return emit.emit()
+    return emit.emit(["a", "b"])
   })
 
   test("returns value from async listener", function () {
     expect.assertions(1)
 
-    emit.any(null, async function () {
+    emit.any(["a", "b"], async function () {
       return true
     })
 
-    return emit.emit().then(out => {
+    return emit.emit(["a", "b", "c"]).then(out => {
       expect(out).toBe(true)
     })
   })
@@ -32,7 +32,7 @@ describe("any (no props)", function () {
   test("calls listener with arguments", function () {
     expect.assertions(6)
 
-    emit.any(null, function (e, ...args) {
+    emit.any("a", function (e, ...args) {
       expect(args).toEqual([1, 2, 3])
       expect(e.args).toEqual([1, 2, 3])
       expect(e.id).toEqual(["b"])
@@ -42,5 +42,15 @@ describe("any (no props)", function () {
     })
 
     return emit.emit(["a", ["b"]], 1, 2, 3)
+  })
+
+  test("doesn't call non-matching listener", function () {
+    expect.assertions(0)
+
+    emit.any(["a", "b"], function () {
+      expect(true).toBe(true)
+    })
+
+    return emit.emit(["a", "c"])
   })
 })

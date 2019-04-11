@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "docs": "typedoc --out docs src",
     "test": "jest"
   },
   "author": "Winton Welsh <winton@cyclo.ps>",

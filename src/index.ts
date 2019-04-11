@@ -1,10 +1,12 @@
 export interface Event {
+  any: (nestedId: EventIdType, fn: (...args) => any) => void
   args: any[];
   cancel?: boolean;
-  emit: Emit,
+  emit: (nestedId: EventIdType, ...args) => any,
   id: string[];
   name: string;
   promises: Set<Promise<any>>,
+  state: object,
   value?: any;
 }
 
@@ -20,15 +22,17 @@ export class Emit {
   anyListeners: ListenersType
   onListeners: ListenersType
   promises: Set<Promise<any>>
+  state: object
 
   constructor() {
     this.anyListeners = {}
     this.onListeners = {}
     this.promises = new Set()
+    this.state = {}
   }
 
   any(nestedId: EventIdType, fn: (...args) => any) {
-    const id = this.flatten(nestedId)
+    const id = this.flattenNestedIds(nestedId)
     const key = id.join(".")
 
     this.anyListeners[key] = this.anyListeners[key] || []
@@ -64,14 +68,16 @@ export class Emit {
     }
   }
   
-  emit(nestedId: EventIdType, ...args) {
-    const id = this.flatten(nestedId)
+  emit(nestedId?: EventIdType, ...args) {
+    const id = this.flattenNestedIds(nestedId)
     const e: Event = {
+      any: this.any.bind(this),
       args,
-      emit: this,
+      emit: this.emit.bind(this),
       id: id.slice(1),
       name: id[0],
-      promises: new Set()
+      promises: new Set(),
+      state: this.state
     }
     
     this.callListener(args, e, this.anyListeners[""])
@@ -109,15 +115,15 @@ export class Emit {
     return e.value
   }
 
-  flatten(id: EventIdType): string[] {
-    if (Array.isArray(id)) {
+  flattenNestedIds(nestedId: EventIdType): string[] {
+    if (Array.isArray(nestedId)) {
       let result = []
-      for (const item of id) {
+      for (const item of nestedId) {
         result = result.concat(item)
       }
       return result
-    } else if (id) {
-      return [id]
+    } else if (nestedId) {
+      return [nestedId]
     } else {
       return []
     }
