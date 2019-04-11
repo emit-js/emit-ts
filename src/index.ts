@@ -45,13 +45,21 @@ export class Emit {
     }
   }
   
-  callListener(args: any[], e: Event, fn: ListenerType) {
-    if (!e.cancel) {
-      const out = fn(e, ...args)
-      if (out && out.then) {
-        e.promises.add(out)
-      } else if (out !== undefined) {
-        e.value = e.value || out
+  callListener(
+    args: any[],
+    e: Event,
+    listeners: ListenerType[]
+  ) {
+    if (listeners) {
+      for (const fn of listeners) {
+        if (!e.cancel) {
+          const out = fn(e, ...args)
+          if (out && out.then) {
+            e.promises.add(out)
+          } else if (out !== undefined) {
+            e.value = e.value || out
+          }
+        }
       }
     }
   }
@@ -66,35 +74,22 @@ export class Emit {
       promises: new Set()
     }
     
-    if (this.anyListeners[""]) {
-      for (const fn of this.anyListeners[""]) {
-        this.callListener(args, e, fn)
-      }
-    }
+    this.callListener(args, e, this.anyListeners[""])
 
-    let key
+    let key: string
 
     for (const i of id) {
       key = key ? key + "." + i : i
-
-      if (this.anyListeners[key]) {
-        for (const fn of this.anyListeners[key]) {
-          this.callListener(args, e, fn)
-        }
-      }
+      this.callListener(args, e, this.anyListeners[key])
     }
 
-    key = id.join(".")
-
-    if (this.onListeners[key]) {
-      for (const fn of this.onListeners[key]) {
-        this.callListener(args, e, fn)
-      }
-    }
+    this.callListener(
+      args, e, this.onListeners[id.join(".")]
+    )
 
     if (e.promises.size) {
       const promise = Promise.all(e.promises)
-        .then(function (results) {
+        .then(results => {
           this.promises.delete(promise)
           return e.value === undefined
             ? results.length < 2
@@ -102,7 +97,7 @@ export class Emit {
               : results
             : e.value
         })
-        .catch(function (err) {
+        .catch(err => {
           this.promises.delete(promise)
           throw err
         })
