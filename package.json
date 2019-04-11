@@ -1,15 +1,20 @@
 {
-  "name": "ts-test",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@emit-js/emit",
+  "version": "4.0.0",
   "main": "dist/index.js",
-  "scripts": {
-    "build": "tsc",
-    "docs": "typedoc --out docs src",
-    "test": "jest"
+  "description": "A javascript event emitter for a new ecosystem of observable libraries",
+  "keywords": [
+    "event",
+    "emitter",
+    "listener"
+  ],
+  "author": "emit <emit@emit-js.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/emit-js/emit.git"
   },
-  "author": "Winton Welsh <winton@cyclo.ps>",
   "license": "MIT",
+  "homepage": "https://github.com/emit-js/emit#readme",
   "devDependencies": {
     "@types/jest": "24.0.11",
     "@types/node": "11.13.0",
@@ -39,7 +44,7 @@
       "prettier --write",
       "git add"
     ],
-    "*.js,*.ts": [
+    "src/**": [
       "eslint --ignore-path .gitignore --fix",
       "git add"
     ]
