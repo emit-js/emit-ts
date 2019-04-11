@@ -19,19 +19,22 @@ export type EventIdType = (
 )
 
 export class Emit {
-  anyListeners: ListenersType
-  onListeners: ListenersType
-  promises: Set<Promise<any>>
-  state: object
+  private anyListeners: ListenersType
+  private onListeners: ListenersType
+  private promises: Set<Promise<any>>
+  private state: object
 
-  constructor() {
+  public constructor() {
     this.anyListeners = {}
     this.onListeners = {}
     this.promises = new Set()
     this.state = {}
   }
 
-  any(nestedId: EventIdType, fn: (...args) => any) {
+  public any(
+    nestedId: EventIdType,
+    fn: (...args) => any
+  ): void {
     const id = this.flattenNestedIds(nestedId)
     const key = id.join(".")
 
@@ -39,7 +42,7 @@ export class Emit {
     this.anyListeners[key].push(fn)
     
     if (id.length === 1) {
-      this[id[0]] = (nestedId: EventIdType, ...args) =>
+      this[id[0]] = (nestedId: EventIdType, ...args): any =>
         this.emit(
           Array.isArray(nestedId) ?
             [id[0], ...nestedId] :
@@ -49,26 +52,7 @@ export class Emit {
     }
   }
   
-  callListener(
-    args: any[],
-    e: Event,
-    listeners: ListenerType[]
-  ) {
-    if (listeners) {
-      for (const fn of listeners) {
-        if (!e.cancel) {
-          const out = fn(e, ...args)
-          if (out && out.then) {
-            e.promises.add(out)
-          } else if (out !== undefined) {
-            e.value = e.value || out
-          }
-        }
-      }
-    }
-  }
-  
-  emit(nestedId?: EventIdType, ...args) {
+  public emit(nestedId?: EventIdType, ...args): any {
     const id = this.flattenNestedIds(nestedId)
     const e: Event = {
       any: this.any.bind(this),
@@ -95,7 +79,7 @@ export class Emit {
 
     if (e.promises.size) {
       const promise = Promise.all(e.promises)
-        .then(results => {
+        .then((results): any => {
           this.promises.delete(promise)
           return e.value === undefined
             ? results.length < 2
@@ -103,7 +87,7 @@ export class Emit {
               : results
             : e.value
         })
-        .catch(err => {
+        .catch((err): void => {
           this.promises.delete(promise)
           throw err
         })
@@ -115,7 +99,38 @@ export class Emit {
     return e.value
   }
 
-  flattenNestedIds(nestedId: EventIdType): string[] {
+  public on(
+    nestedId: EventIdType, fn: (...args) => any
+  ): void {
+    const id = this.flattenNestedIds(nestedId)
+    const key = id.join(".")
+
+    this.onListeners[key] = this.onListeners[key] || []
+    this.onListeners[key].push(fn)
+  }
+
+  private callListener(
+    args: any[],
+    e: Event,
+    listeners: ListenerType[]
+  ): void {
+    if (listeners) {
+      for (const fn of listeners) {
+        if (!e.cancel) {
+          const out = fn(e, ...args)
+          if (out && out.then) {
+            e.promises.add(out)
+          } else if (out !== undefined) {
+            e.value = e.value || out
+          }
+        }
+      }
+    }
+  }
+
+  private flattenNestedIds(
+    nestedId: EventIdType
+  ): string[] {
     if (Array.isArray(nestedId)) {
       let result = []
       for (const item of nestedId) {
@@ -127,13 +142,5 @@ export class Emit {
     } else {
       return []
     }
-  }
-
-  on(nestedId: EventIdType, fn: (...args) => any) {
-    const id = this.flattenNestedIds(nestedId)
-    const key = id.join(".")
-
-    this.onListeners[key] = this.onListeners[key] || []
-    this.onListeners[key].push(fn)
   }
 }
