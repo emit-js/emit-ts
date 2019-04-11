@@ -14,7 +14,7 @@ describe("any (no props)", function () {
       expect(true).toBe(true)
     })
 
-    return emit.emit()
+    return emit.emit(null)
   })
 
   test("returns value from async listener", function () {
@@ -42,5 +42,15 @@ describe("any (no props)", function () {
     })
 
     return emit.emit(["a", ["b"]], 1, 2, 3)
+  })
+
+  test("doesn't call non-matching listener", function () {
+    expect.assertions(0)
+
+    emit.any(["a"], function () {
+      expect(true).toBe(true)
+    })
+
+    return emit.emit()
   })
 })
