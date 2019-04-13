@@ -17,7 +17,7 @@
   "homepage": "https://github.com/emit-js/emit#readme",
   "scripts": {
     "build": "tsc",
-    "docs": "typedoc --out docs src",
+    "docs": "typedoc --out docs --media media src",
     "test": "jest"
   },
   "devDependencies": {

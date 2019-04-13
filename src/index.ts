@@ -1,4 +1,4 @@
-export interface Event {
+export interface EventType {
   any: (nestedId: EventIdType, fn: (...args) => any) => void
   args: any[];
   cancel?: boolean;
@@ -10,7 +10,7 @@ export interface Event {
   value?: any;
 }
 
-export type ListenerType = (e: Event, ...arg) => any
+export type ListenerType = (e: EventType, ...arg) => any
 
 export type ListenersType = Record<string, ListenerType[]>
 
@@ -54,7 +54,7 @@ export class Emit {
   
   public emit(nestedId?: EventIdType, ...args): any {
     const id = this.flattenNestedIds(nestedId)
-    const e: Event = {
+    const e: EventType = {
       any: this.any.bind(this),
       args,
       emit: this.emit.bind(this),
@@ -111,7 +111,7 @@ export class Emit {
 
   private callListener(
     args: any[],
-    e: Event,
+    e: EventType,
     listeners: ListenerType[]
   ): void {
     if (listeners) {
