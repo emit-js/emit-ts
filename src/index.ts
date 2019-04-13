@@ -46,7 +46,7 @@ export class Emit {
         this.emit(
           Array.isArray(nestedId) ?
             [id[0], ...nestedId] :
-            [id[0], nestedId],
+            nestedId ? [id[0], nestedId] : [id[0]],
           ...args
         )
     }
