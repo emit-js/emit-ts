@@ -2,47 +2,47 @@ import { Emit } from "../"
 
 let emit: Emit;
 
-beforeEach(function () {
+beforeEach((): void => {
   emit = new Emit()
 })
 
-describe("any name", function () {
-  test("calls listener", function () {
+describe("any name", (): void => {
+  test("calls listener", (): void => {
     expect.assertions(1)
 
-    emit.any("a", function () {
+    emit.any("a", (): void => {
       expect(true).toBe(true)
     })
 
-    return emit.emit("a")
+    emit.emit("a")
   })
 
-  test("calls listener (broad id match)", function () {
+  test("calls listener (broad id match)", (): void => {
     expect.assertions(1)
 
-    emit.any("a", function () {
+    emit.any("a", (): void => {
       expect(true).toBe(true)
     })
 
-    return emit.emit(["a", "b"])
+    emit.emit(["a", "b"])
   })
 
-  test("returns value from async listener", function () {
+  test("returns value from async listener", (): Promise<void> => {
     expect.assertions(1)
 
-    emit.any(["a"], async function () {
+    emit.any(["a"], async (): Promise<boolean> => {
       return true
     })
 
-    return emit.emit(["a"]).then(out => {
+    return emit.emit(["a"]).then((out): void => {
       expect(out).toBe(true)
     })
   })
 
-  test("doesn't call non-matching listener", function () {
+  test("doesn't call non-matching listener", (): void => {
     expect.assertions(0)
 
-    emit.any("a", function () {
+    emit.any("a", (): void => {
       expect(true).toBe(true)
     })
 

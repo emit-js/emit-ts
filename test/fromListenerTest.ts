@@ -2,16 +2,16 @@ import { Emit } from "../"
 
 let emit: Emit;
 
-beforeEach(function () {
+beforeEach((): void => {
   emit = new Emit()
 })
 
-describe("from listener", function () {
-  test("any", function () {
+describe("from listener", (): void => {
+  test("any", (): void => {
     expect.assertions(1)
 
-    emit.any("a", function (e) {
-      e.any("b", function () {
+    emit.any("a", function (e): void {
+      e.any("b", (): void => {
         expect(true).toBe(true)
       })
     })
@@ -20,17 +20,17 @@ describe("from listener", function () {
     emit.emit("b")
   })
 
-  test("emit", function () {
+  test("emit", (): void => {
     expect.assertions(1)
 
-    emit.any("a", function (e) {
+    emit.any("a", (e): void => {
       e.emit("b")
     })
 
-    emit.any("b", function (e) {
+    emit.any("b", (): void => {
       expect(true).toBe(true)
     })
 
-    return emit.emit("a")
+    emit.emit("a")
   })
 })

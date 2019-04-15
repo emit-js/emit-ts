@@ -2,40 +2,40 @@ import { Emit } from "../"
 
 let emit: Emit;
 
-beforeEach(function () {
+beforeEach((): void => {
   emit = new Emit()
 })
 
-describe("on name", function () {
-  test("calls listener", function () {
+describe("on name", (): void => {
+  test("calls listener", (): void => {
     expect.assertions(1)
 
-    emit.on("a", function () {
+    emit.on("a", (): void => {
       expect(true).toBe(true)
     })
 
-    return emit.emit("a")
+    emit.emit("a")
   })
 
-  test("returns value from async listener", function () {
+  test("returns value from async listener", (): Promise<void> => {
     expect.assertions(1)
 
-    emit.on("a", async function () {
+    emit.on("a", async (): Promise<boolean> => {
       return true
     })
 
-    return emit.emit("a").then(out => {
+    return emit.emit("a").then((out): void => {
       expect(out).toBe(true)
     })
   })
 
-  test("doesn't call non-matching listener", function () {
+  test("doesn't call non-matching listener", (): void => {
     expect.assertions(0)
 
-    emit.on("a", function () {
+    emit.on("a", (): void => {
       expect(true).toBe(true)
     })
 
-    return emit.emit(["a", "b"])
+    emit.emit(["a", "b"])
   })
 })

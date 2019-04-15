@@ -2,15 +2,15 @@ import { Emit } from "../"
 
 let emit: Emit;
 
-beforeEach(function () {
+beforeEach((): void => {
   emit = new Emit()
 })
 
-describe("any args", function () {
-  test("no name", function () {
+describe("any args", (): void => {
+  test("no name", (): void => {
     expect.assertions(6)
 
-    emit.any(null, function (e, ...args) {
+    emit.any(null, (e, ...args): void => {
       expect(args).toEqual([1, 2, 3])
       expect(e.args).toEqual([1, 2, 3])
       expect(e.id).toEqual([])
@@ -19,13 +19,13 @@ describe("any args", function () {
       expect(e.state).toEqual({})
     })
 
-    return emit.emit(null, 1, 2, 3)
+    emit.emit(null, 1, 2, 3)
   })
 
-  test("no name, no args", function () {
+  test("no name, no args", (): void => {
     expect.assertions(6)
 
-    emit.any(null, function (e, ...args) {
+    emit.any(null, (e, ...args): void => {
       expect(args).toEqual([])
       expect(e.args).toEqual([])
       expect(e.id).toEqual([])
@@ -34,13 +34,13 @@ describe("any args", function () {
       expect(e.state).toEqual({})
     })
 
-    return emit.emit(null)
+    emit.emit(null)
   })
 
-  test("name", function () {
+  test("name", (): void => {
     expect.assertions(6)
 
-    emit.any(null, function (e, ...args) {
+    emit.any(null, (e, ...args): void => {
       expect(args).toEqual([1, 2, 3])
       expect(e.args).toEqual([1, 2, 3])
       expect(e.id).toEqual([])
@@ -49,13 +49,13 @@ describe("any args", function () {
       expect(e.state).toEqual({})
     })
 
-    return emit.emit("a", 1, 2, 3)
+    emit.emit("a", 1, 2, 3)
   })
 
-  test("id & name", function () {
+  test("id & name", (): void => {
     expect.assertions(6)
 
-    emit.any(null, function (e, ...args) {
+    emit.any(null, (e, ...args): void => {
       expect(args).toEqual([1, 2, 3])
       expect(e.args).toEqual([1, 2, 3])
       expect(e.id).toEqual(["b"])
@@ -64,6 +64,6 @@ describe("any args", function () {
       expect(e.state).toEqual({})
     })
 
-    return emit.emit(["a", ["b"]], 1, 2, 3)
+    emit.emit(["a", ["b"]], 1, 2, 3)
   })
 })

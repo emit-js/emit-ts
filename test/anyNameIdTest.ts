@@ -2,47 +2,47 @@ import { Emit } from "../"
 
 let emit: Emit;
 
-beforeEach(function () {
+beforeEach((): void => {
   emit = new Emit()
 })
 
-describe("any name & id", function () {
-  test("calls listener", function () {
+describe("any name & id", (): void => {
+  test("calls listener", (): void => {
     expect.assertions(1)
 
-    emit.any(["a", "b"], function () {
+    emit.any(["a", "b"], (): void => {
       expect(true).toBe(true)
     })
 
-    return emit.emit(["a", "b"])
+    emit.emit(["a", "b"])
   })
 
-  test("calls listener (broad id match)", function () {
+  test("calls listener (broad id match)", (): void => {
     expect.assertions(1)
 
-    emit.any(["a", "b"], function () {
+    emit.any(["a", "b"], (): void => {
       expect(true).toBe(true)
     })
 
     return emit.emit(["a", "b", "c"])
   })
 
-  test("returns value from async listener", function () {
+  test("returns value from async listener", (): Promise<void> => {
     expect.assertions(1)
 
-    emit.any(["a", "b"], async function () {
+    emit.any(["a", "b"], async (): Promise<boolean> => {
       return true
     })
 
-    return emit.emit(["a", "b", "c"]).then(out => {
+    return emit.emit(["a", "b", "c"]).then((out): void => {
       expect(out).toBe(true)
     })
   })
 
-  test("doesn't call non-matching listener", function () {
+  test("doesn't call non-matching listener", (): void => {
     expect.assertions(0)
 
-    emit.any(["a", "b"], function () {
+    emit.any(["a", "b"], (): void => {
       expect(true).toBe(true)
     })
 

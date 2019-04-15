@@ -2,49 +2,49 @@ import { Emit } from "../"
 
 let emit: Emit;
 
-beforeEach(function () {
+beforeEach((): void => {
   emit = new Emit()
 })
 
-describe("any no name", function () {
-  test("calls listener", function () {
+describe("any no name", (): void => {
+  test("calls listener", (): void => {
     expect.assertions(1)
 
-    emit.any(null, function () {
+    emit.any(null, (): void => {
       expect(true).toBe(true)
     })
 
-    return emit.emit(null)
+    emit.emit(null)
   })
 
-  test("calls listener (broad name match)", function () {
+  test("calls listener (broad name match)", (): void => {
     expect.assertions(1)
 
-    emit.any(null, function () {
+    emit.any(null, (): void => {
       expect(true).toBe(true)
     })
 
-    return emit.emit("a")
+    emit.emit("a")
   })
 
-  test("calls listener (broad id match)", function () {
+  test("calls listener (broad id match)", (): void => {
     expect.assertions(1)
 
-    emit.any(null, function () {
+    emit.any(null, (): void => {
       expect(true).toBe(true)
     })
 
-    return emit.emit(["a", "b"])
+    emit.emit(["a", "b"])
   })
 
-  test("returns value from async listener", function () {
+  test("returns value from async listener", (): Promise<void> => {
     expect.assertions(1)
 
-    emit.any(null, async function () {
+    emit.any(null, async (): Promise<boolean> => {
       return true
     })
 
-    return emit.emit().then(out => {
+    return emit.emit().then((out): void => {
       expect(out).toBe(true)
     })
   })
