@@ -1,12 +1,10 @@
 export interface EventType {
-  any: (nestedId: EventIdType, fn: (...args) => any) => void
   args: any[];
   cancel?: boolean;
-  emit: (nestedId: EventIdType, ...args) => any,
+  emit: Emit,
   id: string[];
   name: string;
   promises: Set<Promise<any>>,
-  state: object,
   value?: any;
 }
 
@@ -22,18 +20,16 @@ export class Emit {
   private anyListeners: ListenersType
   private onListeners: ListenersType
   private promises: Set<Promise<any>>
-  private state: object
 
   public constructor() {
     this.anyListeners = {}
     this.onListeners = {}
     this.promises = new Set()
-    this.state = {}
   }
 
   public any(
     nestedId: EventIdType,
-    fn: (...args) => any
+    fn: ListenerType
   ): void {
     const id = this.flattenNestedIds(nestedId)
     const key = id.join(".")
@@ -55,13 +51,11 @@ export class Emit {
   public emit(nestedId?: EventIdType, ...args): any {
     const id = this.flattenNestedIds(nestedId)
     const e: EventType = {
-      any: this.any.bind(this),
       args,
-      emit: this.emit.bind(this),
+      emit: this,
       id: id.slice(1),
       name: id[0],
-      promises: new Set(),
-      state: this.state
+      promises: new Set()
     }
     
     this.callListener(args, e, this.anyListeners[""])
@@ -100,7 +94,8 @@ export class Emit {
   }
 
   public on(
-    nestedId: EventIdType, fn: (...args) => any
+    nestedId: EventIdType,
+    fn: ListenerType
   ): void {
     const id = this.flattenNestedIds(nestedId)
     const key = id.join(".")

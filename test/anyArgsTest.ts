@@ -8,7 +8,7 @@ beforeEach((): void => {
 
 describe("any args", (): void => {
   test("no name", (): void => {
-    expect.assertions(6)
+    expect.assertions(5)
 
     emit.any(null, (e, ...args): void => {
       expect(args).toEqual([1, 2, 3])
@@ -16,14 +16,13 @@ describe("any args", (): void => {
       expect(e.id).toEqual([])
       expect(e.name).toBeUndefined()
       expect(e.promises).toEqual(expect.any(Set))
-      expect(e.state).toEqual({})
     })
 
     emit.emit(null, 1, 2, 3)
   })
 
   test("no name, no args", (): void => {
-    expect.assertions(6)
+    expect.assertions(5)
 
     emit.any(null, (e, ...args): void => {
       expect(args).toEqual([])
@@ -31,14 +30,13 @@ describe("any args", (): void => {
       expect(e.id).toEqual([])
       expect(e.name).toBeUndefined()
       expect(e.promises).toEqual(expect.any(Set))
-      expect(e.state).toEqual({})
     })
 
     emit.emit(null)
   })
 
   test("name", (): void => {
-    expect.assertions(6)
+    expect.assertions(5)
 
     emit.any(null, (e, ...args): void => {
       expect(args).toEqual([1, 2, 3])
@@ -46,14 +44,13 @@ describe("any args", (): void => {
       expect(e.id).toEqual([])
       expect(e.name).toBe("a")
       expect(e.promises).toEqual(expect.any(Set))
-      expect(e.state).toEqual({})
     })
 
     emit.emit("a", 1, 2, 3)
   })
 
   test("id & name", (): void => {
-    expect.assertions(6)
+    expect.assertions(5)
 
     emit.any(null, (e, ...args): void => {
       expect(args).toEqual([1, 2, 3])
@@ -61,7 +58,6 @@ describe("any args", (): void => {
       expect(e.id).toEqual(["b"])
       expect(e.name).toBe("a")
       expect(e.promises).toEqual(expect.any(Set))
-      expect(e.state).toEqual({})
     })
 
     emit.emit(["a", ["b"]], 1, 2, 3)

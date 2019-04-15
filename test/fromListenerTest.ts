@@ -11,7 +11,7 @@ describe("from listener", (): void => {
     expect.assertions(1)
 
     emit.any("a", function (e): void {
-      e.any("b", (): void => {
+      e.emit.any("b", (): void => {
         expect(true).toBe(true)
       })
     })
@@ -24,7 +24,7 @@ describe("from listener", (): void => {
     expect.assertions(1)
 
     emit.any("a", (e): void => {
-      e.emit("b")
+      e.emit.emit("b")
     })
 
     emit.any("b", (): void => {
