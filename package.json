@@ -17,7 +17,7 @@
   "homepage": "https://github.com/emit-js/emit#readme",
   "scripts": {
     "build": "tsc",
-    "docs": "typedoc --out docs --media media src/emit.ts --theme markdown",
+    "docs": "typedoc --out docs --media media --theme markdown src/emit.ts",
     "test": "jest"
   },
   "devDependencies": {
@@ -30,7 +30,8 @@
     "jest": "24.7.1",
     "lint-staged": "8.1.5",
     "prettier": "1.16.4",
-    "ts-jest": "^24.0.2",
+    "ts-jest": "24.0.2",
+    "typedoc": "0.14.2",
     "typedoc-plugin-markdown": "1.2.0",
     "typescript": "3.4.2"
   },
