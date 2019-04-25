@@ -4,7 +4,7 @@ export interface EventType {
   emit: Emit,
   id: string[];
   name: string;
-  promises: Set<Promise<any>>,
+  promises: Set<Promise<any>>;
   value?: any;
 }
 
