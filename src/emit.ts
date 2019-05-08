@@ -8,6 +8,8 @@ export interface EventType {
   value?: any;
 }
 
+export type ListenType = (emit: Emit) => void
+
 export type ListenerType = (e: EventType, ...arg) => any
 
 export type ListenersType = Record<string, ListenerType[]>
@@ -91,6 +93,19 @@ export class Emit {
     }
 
     return e.value
+  }
+
+  public async listen(
+    ...promises: Promise<{ listen: ListenType }>[]
+  ): Promise<void> {
+    await Promise.all(
+      promises.map(async (
+        promise: Promise<{ listen: ListenType }>
+      ): Promise<void> => {
+        const { listen } = await promise
+        await listen(this)
+      })
+    )
   }
 
   public on(
