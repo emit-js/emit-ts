@@ -19,6 +19,8 @@ export type EventIdType = (
 )
 
 export class Emit {
+  [k: string]: any
+  
   private anyListeners: ListenersType
   private onListeners: ListenersType
   private promises: Set<Promise<any>>
