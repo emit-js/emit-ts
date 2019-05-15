@@ -35,7 +35,7 @@ export class Emit {
     nestedId: EventIdType,
     fn: ListenerType
   ): void {
-    const id = this.flattenNestedIds(nestedId)
+    const id = Emit.flattenEventIds(nestedId)
     const key = id.join(".")
 
     this.anyListeners[key] = this.anyListeners[key] || []
@@ -53,7 +53,7 @@ export class Emit {
   }
   
   public emit(nestedId?: EventIdType, ...args): any {
-    const id = this.flattenNestedIds(nestedId)
+    const id = Emit.flattenEventIds(nestedId)
     const e: EventType = {
       args,
       emit: this,
@@ -97,6 +97,22 @@ export class Emit {
     return e.value
   }
 
+  public static flattenEventIds(
+    nestedId: EventIdType
+  ): string[] {
+    if (Array.isArray(nestedId)) {
+      let result = []
+      for (const item of nestedId) {
+        result = result.concat(item)
+      }
+      return result
+    } else if (nestedId) {
+      return [nestedId]
+    } else {
+      return []
+    }
+  }
+
   public async listen(
     ...promises: Promise<{ listen: ListenType }>[]
   ): Promise<void> {
@@ -114,7 +130,7 @@ export class Emit {
     nestedId: EventIdType,
     fn: ListenerType
   ): void {
-    const id = this.flattenNestedIds(nestedId)
+    const id = Emit.flattenEventIds(nestedId)
     const key = id.join(".")
 
     this.onListeners[key] = this.onListeners[key] || []
@@ -137,22 +153,6 @@ export class Emit {
           }
         }
       }
-    }
-  }
-
-  private flattenNestedIds(
-    nestedId: EventIdType
-  ): string[] {
-    if (Array.isArray(nestedId)) {
-      let result = []
-      for (const item of nestedId) {
-        result = result.concat(item)
-      }
-      return result
-    } else if (nestedId) {
-      return [nestedId]
-    } else {
-      return []
     }
   }
 }
