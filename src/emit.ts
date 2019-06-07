@@ -23,17 +23,20 @@ export class Emit {
   
   private anyListeners: ListenersType
   private onListeners: ListenersType
+  private called: Set<string>
   private promises: Set<Promise<any>>
 
   public constructor() {
     this.anyListeners = {}
     this.onListeners = {}
+    this.called = new Set()
     this.promises = new Set()
   }
 
   public any(
     nestedId: EventIdType,
-    fn: ListenerType
+    fn: ListenerType,
+    ever?: boolean
   ): void {
     const id = Emit.flattenEventIds(nestedId)
     const key = id.join(".")
@@ -50,17 +53,15 @@ export class Emit {
           ...args
         )
     }
+
+    if (ever) {
+      this.ever(key, id, fn)
+    }
   }
   
   public emit(nestedId?: EventIdType, ...args): any {
     const id = Emit.flattenEventIds(nestedId)
-    const e: EventType = {
-      args,
-      emit: this,
-      id: id.slice(1),
-      name: id[0],
-      promises: new Set()
-    }
+    const e = this.event(id, args)
     
     this.callListener(args, e, this.anyListeners[""])
 
@@ -69,11 +70,11 @@ export class Emit {
     for (const i of id) {
       key = key ? key + "." + i : i
       this.callListener(args, e, this.anyListeners[key])
+      this.called.add(key)
     }
 
-    this.callListener(
-      args, e, this.onListeners[id.join(".")]
-    )
+    this.callListener(args, e, this.onListeners[key || ""])
+    this.called.add(key)
 
     if (e.promises.size) {
       const promise = Promise.all(e.promises)
@@ -95,6 +96,24 @@ export class Emit {
     }
 
     return e.value
+  }
+
+  private event(id: string[], args: any[]): EventType {
+    return {
+      args,
+      emit: this,
+      id: id.slice(1),
+      name: id[0],
+      promises: new Set()
+    }
+  }
+
+  private ever(
+    key: string, id: string[], fn: ListenerType
+  ): void {
+    if (this.called.has(key)) {
+      this.callListener([], this.event(id, []), [fn])
+    }
   }
 
   public static flattenEventIds(
@@ -128,13 +147,18 @@ export class Emit {
 
   public on(
     nestedId: EventIdType,
-    fn: ListenerType
+    fn: ListenerType,
+    ever?: boolean
   ): void {
     const id = Emit.flattenEventIds(nestedId)
     const key = id.join(".")
 
     this.onListeners[key] = this.onListeners[key] || []
     this.onListeners[key].push(fn)
+
+    if (ever) {
+      this.ever(key, id, fn)
+    }
   }
 
   private callListener(
