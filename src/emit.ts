@@ -44,7 +44,7 @@ export class Emit {
     this.anyListeners[key] = this.anyListeners[key] || []
     this.anyListeners[key].push(fn)
     
-    if (id.length === 1) {
+    if (!this[id[0]]) {
       this[id[0]] = (nestedId: EventIdType, ...args): any =>
         this.emit(
           Array.isArray(nestedId) ?
