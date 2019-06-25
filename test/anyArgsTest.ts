@@ -41,7 +41,7 @@ describe("any args", (): void => {
     emit.any(null, (e, ...args): void => {
       expect(args).toEqual([1, 2, 3])
       expect(e.args).toEqual([1, 2, 3])
-      expect(e.id).toEqual([])
+      expect(e.id).toEqual(["a"])
       expect(e.name).toBe("a")
       expect(e.promises).toEqual(expect.any(Set))
     })
@@ -55,7 +55,7 @@ describe("any args", (): void => {
     emit.any(null, (e, ...args): void => {
       expect(args).toEqual([1, 2, 3])
       expect(e.args).toEqual([1, 2, 3])
-      expect(e.id).toEqual(["b"])
+      expect(e.id).toEqual(["b", "a"])
       expect(e.name).toBe("a")
       expect(e.promises).toEqual(expect.any(Set))
     })

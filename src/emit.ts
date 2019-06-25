@@ -102,7 +102,7 @@ export class Emit {
     return {
       args,
       emit: this,
-      id: id.slice(1),
+      id: [...id.slice(1), ...(id[0] ? [id[0]] : [])],
       name: id[0],
       promises: new Set()
     }
